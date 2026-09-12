@@ -12,8 +12,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
@@ -41,6 +41,14 @@ private val tabs = listOf(Tab.Market, Tab.Inventory, Tab.Wallet)
 fun AppNavHost(viewModel: MarketplaceViewModel = viewModel()) {
     val navController = rememberNavController()
     val uiState = viewModel.uiState
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(uiState.lastMessage) {
+        uiState.lastMessage?.let { message ->
+            snackbarHostState.showSnackbar(message)
+            viewModel.clearLastMessage()
+        }
+    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -63,13 +71,6 @@ fun AppNavHost(viewModel: MarketplaceViewModel = viewModel()) {
                             }
                         },
                         icon = {
-val snackbarHostState = remember { SnackbarHostState() }
-    LaunchedEffect(uiState.lastMessage) {
-        uiState.lastMessage?.let { message ->
-            snackbarHostState.showSnackbar(message)
-            viewModel.clearLastMessage()
-        }
-    }
                             val icon = when (tab) {
                                 Tab.Market -> Icons.Filled.Storefront
                                 Tab.Inventory -> Icons.Filled.Inventory2
@@ -117,5 +118,3 @@ val snackbarHostState = remember { SnackbarHostState() }
         }
     }
 }
-
-
