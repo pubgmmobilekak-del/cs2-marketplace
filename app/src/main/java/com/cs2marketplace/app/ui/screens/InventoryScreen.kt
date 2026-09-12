@@ -50,6 +50,7 @@ fun InventoryScreen(
                 val isSendable = item.tradeStatus == TradeStatus.INVENTORDA
                 ItemCard(
                     item = item,
+                    modifier = Modifier.animateItemPlacement(),
                     showStatus = true,
                     actionLabel = when (item.tradeStatus) {
                         TradeStatus.INVENTORDA -> "Steam'ga chiqarish"

@@ -34,6 +34,7 @@ fun MarketScreen(
             items(market, key = { it.id }) { item ->
                 ItemCard(
                     item = item,
+                    modifier = Modifier.animateItemPlacement(),
                     actionLabel = "Sotib olish",
                     actionEnabled = balanceUsd >= item.price,
                     onAction = { onBuy(item) }

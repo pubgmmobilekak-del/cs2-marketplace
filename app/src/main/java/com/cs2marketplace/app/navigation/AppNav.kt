@@ -8,9 +8,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -39,6 +43,7 @@ fun AppNavHost(viewModel: MarketplaceViewModel = viewModel()) {
     val uiState = viewModel.uiState
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
             NavigationBar {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -58,6 +63,13 @@ fun AppNavHost(viewModel: MarketplaceViewModel = viewModel()) {
                             }
                         },
                         icon = {
+val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(uiState.lastMessage) {
+        uiState.lastMessage?.let { message ->
+            snackbarHostState.showSnackbar(message)
+            viewModel.clearLastMessage()
+        }
+    }
                             val icon = when (tab) {
                                 Tab.Market -> Icons.Filled.Storefront
                                 Tab.Inventory -> Icons.Filled.Inventory2
@@ -105,3 +117,5 @@ fun AppNavHost(viewModel: MarketplaceViewModel = viewModel()) {
         }
     }
 }
+
+
